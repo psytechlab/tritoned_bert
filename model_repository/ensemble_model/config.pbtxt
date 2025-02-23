@@ -1,0 +1,74 @@
+name: "ensemble_model"
+platform: "ensemble"
+max_batch_size: 1
+input [
+  {
+    name: "text_input"
+    data_type: TYPE_STRING
+    dims: [ -1 ]
+  }
+]
+output [
+  {
+    name: "predicts"
+    data_type: TYPE_STRING
+    dims: [ -1 ]
+  }
+]
+
+ensemble_scheduling {
+  step [
+    {
+      model_name: "text_preprocessing"
+      model_version: -1
+      input_map {
+        key: "text_input"
+        value: "text_input"
+      }
+      output_map {
+        key: "input_ids"
+        value: "input_ids"
+      }
+      output_map {
+        key: "attention_mask"
+        value: "attention_mask"
+      }
+      output_map {
+        key: "token_type_ids"
+        value: "token_type_ids"
+      }
+    },
+    {
+      model_name: "antisui_onnx"
+      model_version: -1
+      input_map {
+        key: "input_ids"
+        value: "input_ids"
+      }
+      input_map {
+        key: "attention_mask"
+        value: "attention_mask"
+      }
+      input_map {
+        key: "token_type_ids"
+        value: "token_type_ids"
+      }
+      output_map {
+        key: "logits"
+        value: "logits"
+      }
+    },
+    {
+      model_name: "post_processing"
+      model_version: -1
+      input_map {
+        key: "logits"
+        value: "logits"
+      }
+      output_map {
+        key: "predicts"
+        value: "predicts"
+      }
+    }
+]
+}

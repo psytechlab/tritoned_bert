@@ -1,0 +1,30 @@
+name: "text_preprocessing"
+backend: "python"
+max_batch_size: 256
+input [
+{
+    name: "text_input"
+    data_type: TYPE_STRING
+    dims: [ -1 ]
+}
+]
+
+output [
+  {
+    name: "input_ids"
+    data_type: TYPE_INT64
+    dims: [ -1 ]
+  },
+  {
+    name: "attention_mask"
+    data_type: TYPE_INT64
+    dims: [ -1 ]
+  },
+  {
+    name: "token_type_ids"
+    data_type: TYPE_INT64
+    dims: [ -1 ]
+  }
+]
+
+instance_group [{ kind: KIND_CPU }]

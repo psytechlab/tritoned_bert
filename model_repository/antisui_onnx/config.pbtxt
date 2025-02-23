@@ -1,0 +1,29 @@
+name: "antisui_onnx"
+backend: "onnxruntime"
+max_batch_size : 1
+
+input [
+  {
+    name: "input_ids"
+    data_type: TYPE_INT64
+    dims: [ -1 ]
+  },
+  {
+    name: "attention_mask"
+    data_type: TYPE_INT64
+    dims: [ -1 ]
+  },
+  {
+    name: "token_type_ids"
+    data_type: TYPE_INT64
+    dims: [ -1 ]
+  }
+]
+
+output [
+{
+    name: "logits"
+    data_type: TYPE_FP32
+    dims: [ 6 ]
+  }
+]

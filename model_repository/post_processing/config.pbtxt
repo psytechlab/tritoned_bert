@@ -1,0 +1,20 @@
+name: "post_processing"
+backend: "python"
+max_batch_size: 256
+input [
+{
+    name: "logits"
+    data_type: TYPE_FP32
+    dims: [ 6 ]
+}
+]
+
+output [
+  {
+    name: "predicts"
+    data_type: TYPE_STRING
+    dims: [ -1 ]
+  }
+]
+
+instance_group [{ kind: KIND_CPU }]
