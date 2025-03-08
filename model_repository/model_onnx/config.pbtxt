@@ -1,4 +1,4 @@
-name: "antisui_onnx"
+name: "model_onnx"
 backend: "onnxruntime"
 max_batch_size : 1
 
