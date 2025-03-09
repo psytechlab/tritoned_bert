@@ -31,7 +31,7 @@ class TritonPythonModel:
         #model_config = json.loads(args["model_config"])
         
         tokenizer_path = Path.cwd() / "text_preprocessing/1/tokenizer"
-        self.tokenizer = AutoTokenizer.from_pretrained("DeepPavlov/rubert-base-cased")
+        self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
 
         # Get OUTPUT0 configuration
         #output0_config = pb_utils.get_output_config_by_name(
