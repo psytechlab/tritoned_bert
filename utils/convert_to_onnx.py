@@ -1,16 +1,36 @@
+"""Convert trained AutoModelForSequenceClassification model from transformers into ONNX format"""
 import argparse
 from optimum.onnxruntime import ORTModelForSequenceClassification
 from transformers import AutoTokenizer
 from pathlib import Path
-import clearml
 
 def download_from_clearml(model_id: str):
+    import clearml
     model_path = clearml.InputModel(model_id=model_id)
     path = model_path.get_local_copy(extract_archive=None)
-    print(path)
     return path
 
-def get_artifacts_from_storage(path, storage_type):
+def get_artifacts_from_storage(path: str, storage_type: str):
+    """Resolve path to get actual path to the artifact.
+    
+    This is a interface switcher to any kind of storages where
+    the models and tokenizers could be stored. This func takes
+    "abstact" path to the artifact and type of the storage as input
+    and route it to the function that can conver "path" of the specific
+    storage to the actual path.
+    
+    Currently implemented:
+        * local - this is just a normal path to the artifact in the system
+        * hf - model path in Hugging face Hub
+        * clearml - id of the "Model" instance in the ClearML system
+    
+    Args:
+        path (str): abstact path in the specific storage
+        storage_type (str): type of the storage
+    
+    Returns:
+        (str): actual path in the system
+    """
     if storage_type == "local" or storage_type == "hf":
         return path
     elif storage_type == "clearml":
