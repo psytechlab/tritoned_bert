@@ -30,7 +30,7 @@ class TritonPythonModel:
         # You must parse model_config. JSON string is not parsed here
         #model_config = json.loads(args["model_config"])
         
-        #tokenizer_path = Path.cwd() / "triton_models" / "preprocessing" / "1"
+        tokenizer_path = Path.cwd() / "text_preprocessing/1/tokenizer"
         self.tokenizer = AutoTokenizer.from_pretrained("DeepPavlov/rubert-base-cased")
 
         # Get OUTPUT0 configuration
