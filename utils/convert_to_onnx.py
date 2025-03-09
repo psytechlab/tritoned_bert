@@ -4,13 +4,13 @@ from transformers import AutoTokenizer
 from pathlib import Path
 import clearml
 
-def download_from_clearml(model_id):
+def download_from_clearml(model_id: str):
     model_path = clearml.InputModel(model_id=model_id)
     path = model_path.get_local_copy(extract_archive=None)
     print(path)
     return path
 
-def download(path, storage_type):
+def get_artifacts_from_storage(path, storage_type):
     if storage_type == "local" or storage_type == "hf":
         return path
     elif storage_type == "clearml":
@@ -19,8 +19,8 @@ def download(path, storage_type):
         raise ValueError("Unknown storage type")
     
 def main(args):
-    model_path = download(args.model_path, args.where_model)
-    tokenizer_path = download(args.model_path, args.where_tokenizer)
+    model_path = get_artifacts_from_storage(args.model_path, args.where_model)
+    tokenizer_path = get_artifacts_from_storage(args.tokenizer_path, args.where_tokenizer)
 
     ort_model = ORTModelForSequenceClassification.from_pretrained(model_path, export=True)
     tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
