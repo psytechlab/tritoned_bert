@@ -5,7 +5,7 @@ input [
 {
     name: "logits"
     data_type: TYPE_FP32
-    dims: [ 6 ]
+    dims: [ $CLASS_NUM ]
 }
 ]
 
