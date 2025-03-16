@@ -34,7 +34,7 @@ class TritonPythonModel:
         with open("/models/post_processing/1/id2label.json", encoding='utf-8') as f:
             id2label = json.load(f)
 
-        self.id2label = {int(v):k for k,v in id2label.items()}
+        self.id2label = {int(k):v for k,v in id2label.items()}
 
         # Get OUTPUT0 configuration
         #output0_config = pb_utils.get_output_config_by_name(
