@@ -35,6 +35,7 @@ python utils/convert_to_onnx.py -m $MODEL_PATH -t $TOKENIZER_PATH -s $ONNX_MODEL
 echo "Processing templates"
 export NUM_CLASSES=$NUM_CLASSES
 export MODEL_NAME=$MODEL_NAME
+export MAX_BATCH_SIZE=$MAX_BATCH_SIZE
 bash process_template.sh
 rm -rf model_repository/**/*.template
 
