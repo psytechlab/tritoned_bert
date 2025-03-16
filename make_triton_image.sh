@@ -47,7 +47,7 @@ mv "$ONNX_MODEL"/*.json "model_repository/text_preprocessing/1/tokenizer"
 mv "$ONNX_MODEL"/vocab.txt "model_repository/text_preprocessing/1/tokenizer"
 # moving id2label
 cp $ID2LABEL_PATH "model_repository/post_processing/1/id2label.json"
-if [ ! $MODEL_NAME -eq "ensemble_model"];
+if [ ! "$MODEL_NAME" = "ensemble_model" ];
 then
     mv model_repository/ensemble_model model_repository/"$MODEL_NAME"
 fi
