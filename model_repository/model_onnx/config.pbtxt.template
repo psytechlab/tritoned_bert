@@ -24,6 +24,6 @@ output [
 {
     name: "logits"
     data_type: TYPE_FP32
-    dims: [ $CLASS_NUM ]
+    dims: [ $NUM_CLASSES ]
   }
 ]
