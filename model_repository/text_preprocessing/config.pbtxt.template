@@ -1,6 +1,6 @@
 name: "text_preprocessing"
 backend: "python"
-max_batch_size: 256
+max_batch_size: $MAX_BATCH_SIZE
 input [
 {
     name: "text_input"

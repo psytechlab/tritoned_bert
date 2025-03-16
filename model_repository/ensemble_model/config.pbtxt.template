@@ -1,6 +1,6 @@
 name: "$MODEL_NAME"
 platform: "ensemble"
-max_batch_size: 1
+max_batch_size: $MAX_BATCH_SIZE
 input [
   {
     name: "text_input"

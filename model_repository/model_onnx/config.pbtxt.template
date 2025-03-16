@@ -1,6 +1,6 @@
 name: "model_onnx"
 backend: "onnxruntime"
-max_batch_size : 1
+max_batch_size : $MAX_BATCH_SIZE
 
 input [
   {

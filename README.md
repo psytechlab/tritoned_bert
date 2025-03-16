@@ -1,16 +1,19 @@
 # Tritoned Bert
-В этом репо хранится шаблон для докер-образа модели классификации на основе BERT с помощью Trtiton Inference Server в формате ONNX. Проетстировано с классо `AutoModelForSequenceClassification` из библиотеки Hugging Face.
+В этом репо хранится шаблон для докер-образа, который содержит модель классификации на основе BERT в формате ONNX. Базовым инструментом инференса служит Trtiton Inference Server. Расчитано на класс `AutoModelForSequenceClassification` из библиотеки Hugging Face.
+
+Важно: на данный момент сервис будет работать на CPU.
 
 # Автоматическая сборка докер-образа по шаблону
 
 1. Убедитесь, что у вас установлены зависимости из `requirements.txt`.
 2. Установите `apt-get install gettext-base`.
-2. Выполните скрипт `make_triton_image.sh`, передав параметры в следующем порядке:
+4. Выполните скрипт `make_triton_image.sh`, передав параметры в следующем порядке:
   1. model_path — путь до модели.
   2. tokenizer_path — путь до токенайзера.
   3. id2label_path — путь до файла с маппингом классов.
   4. num_classes — количество классов в модели.
   5. model_name — финальное имя модели, которое в том числе будет фигурировать в API.
+  6. max_batch_size — максимальный размер батча, который будет обрабатываться Тритоном за раз.
   
 ## Пояснения к скриптам
 
@@ -72,23 +75,23 @@ tritonserver --model-repository=/models
 
 ## Проверить состояние сервера
 ```bash
-$ curl -v is2.isa.ru:8000/v2/health/ready
+$ curl -v 127.0.0.1:8000/v2/health/ready
 ```
 
 ## Сделать запрос модели
 В данном примере показан запрос для модели, которая имеет общее имя "ensemble_model"
 
 ```bash
-$ curl -X POST http://is2.isa.ru:8000/v2/models/ensemble_model/infer -d '{"inputs":[{"name":"text_input","shape":[1,1],"datatype":"BYTES","data":["помогите мне"]}]}'
+$ curl -X POST http://127.0.0.1:8000/v2/models/ensemble_model/infer -d '{"inputs":[{"name":"text_input","shape":[1,1],"datatype":"BYTES","data":["помогите мне"]}]}'
 ```
 
 # Конвертация модели в ONNX
 
-Для быстрой конвертации модели ONNX так, чтобы всё подошло по формату, можно использовать скрипт `utils/convert_to_onnx.py`. Для его работы необходимо передать пути до самой модели и ее токенизатора, сохраненной по протоколу библиотеки transformers, а также файл с маппингом классов `id2label.json`. 
+Для быстрой конвертации модели ONNX так, чтобы всё подошло по формату, можно использовать скрипт `utils/convert_to_onnx.py`. Для его работы необходимо передать пути до самой модели и ее токенизатора, сохраненной по протоколу библиотеки transformers (напимер, через класс `Trainer`), а также файл с маппингом классов `id2label.json`. 
 
-Скрипт позволяет взаимодействовать не только с путями локальными, но и с другими хранилищями, где модели и токенизаторы могут лежать. Пути могут различаться. На данный момент реализовано:
+Скрипт позволяет взаимодействовать не только с локальными путями, но и с другими хранилищами, где могут лежать модели и токенизаторы. Для токенизатора и модели надо указывать пути отдельно, что подразумевает независимость их нахождения. На данный момент реализовано:
 - local — путь до локальной директории
-- learml — путь представляет собой id объекта в Clearml.
+- clearml — путь представляет собой id объекта в Clearml.
 - hf — путь в Hugging face Hub, который имеет формат "user/model_name".
 
 Скрипт легко расширить на другие хранилища, как, например, WandB.
@@ -99,3 +102,4 @@ $ curl -X POST http://is2.isa.ru:8000/v2/models/ensemble_model/infer -d '{"input
 2. https://dev.singularitynet.io/docs/products/AIMarketplace/ForConsumers/triton-instructions/
 3. https://github.com/kserve/kserve/tree/master/docs/predict-api/v2
 4. https://github.com/triton-inference-server/server/tree/main/docs/protocol
+5. https://docs.nvidia.com/deeplearning/frameworks/support-matrix/index.html
