@@ -1,5 +1,4 @@
 #/bin/bash
-source .env.$ENVIRONMENT
 
 # Process all configuration templates
 shopt -s globstar 
