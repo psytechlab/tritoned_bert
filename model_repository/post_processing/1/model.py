@@ -29,12 +29,12 @@ class TritonPythonModel:
         """
 
         # You must parse model_config. JSON string is not parsed here
-        #model_config = json.loads(args["model_config"])
+        # model_config = json.loads(args["model_config"])
         
-        #tokenizer_path = Path.cwd() / "triton_models" / "preprocessing" / "1"
         with open("/models/post_processing/1/id2label.json", encoding='utf-8') as f:
             id2label = json.load(f)
-        self.id2label = {v:k for k,v in id2label.items()}
+
+        self.id2label = {int(k):v for k,v in id2label.items()}
 
         # Get OUTPUT0 configuration
         #output0_config = pb_utils.get_output_config_by_name(
@@ -75,7 +75,6 @@ class TritonPythonModel:
             in_0 = pb_utils.get_input_tensor_by_name(
                 request, "logits"
             ).as_numpy()
-            print(in_0)
 
             predicts = in_0.argmax(axis=1)
             predicts = np.array([self.id2label[x] for x in predicts], dtype=object)
