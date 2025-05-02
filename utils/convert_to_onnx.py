@@ -3,12 +3,23 @@ import argparse
 from optimum.onnxruntime import ORTModelForSequenceClassification
 from transformers import AutoTokenizer
 from pathlib import Path
+from shutil import copytree, rmtree
 
-def download_from_clearml(model_id: str):
-    import clearml
-    model_path = clearml.InputModel(model_id=model_id)
-    path = model_path.get_local_copy(extract_archive=None)
-    return path
+def download_model_from_clearml(model_id: str, target_path: str | Path | None = None, override: bool = False):
+    from clearml import InputModel
+    if isinstance(target_path, str):
+        target_path = Path(target_path)
+    model_path = InputModel(model_id).get_local_copy(extract_archive=True)
+    if target_path is None:
+        return model_path
+    if target_path.exists() and override:
+        rmtree(target_path)
+        copytree(model_path, target_path)
+    elif not target_path.exists():
+        copytree(model_path, target_path)
+    else:
+        raise ValueError(f"Path {target_path} exists.")
+    return target_path
 
 def get_artifacts_from_storage(path: str, storage_type: str):
     """Resolve path to get actual path to the artifact.
@@ -34,7 +45,7 @@ def get_artifacts_from_storage(path: str, storage_type: str):
     if storage_type == "local" or storage_type == "hf":
         return path
     elif storage_type == "clearml":
-        return download_from_clearml(path)
+        return download_model_from_clearml(path, )
     else:
         raise ValueError("Unknown storage type")
     
