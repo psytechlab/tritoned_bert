@@ -72,10 +72,10 @@ class TritonPythonModel:
             in_0 = pb_utils.get_input_tensor_by_name(
                 request, "text_input"
             ).as_numpy()
-            print(in_0)
-
-            tokenized_text = self.tokenizer.batch_encode_plus([in_0[0][0].decode("UTF-8")], return_tensors="np")
-            
+            tokenized_text = self.tokenizer.batch_encode_plus([x[0].decode("UTF-8") for x in in_0], return_tensors="np", 
+                                                              padding=True, 
+                                                              max_length=512,
+                                                              truncation=True)
             out_tensor_0 = [pb_utils.Tensor(k,v) for k,v in tokenized_text.items()]
 
             # Create InferenceResponse. You can set an error here in case
