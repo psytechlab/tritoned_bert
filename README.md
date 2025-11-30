@@ -3,11 +3,39 @@
 
 Важно: на данный момент сервис будет работать на CPU.
 
+# Установка окрежния
+
+1. Установите зависимости из `requirements.txt`.
+```
+$ pip install -r requirements.txt
+```
+
+2. Установите `apt-get install gettext-base cmake build-essential protobuf-compiler python3.12-dev`.
+
+## Известные ошибки
+
+Если при установки Python-зависимсотей возникает ошибка
+
+```
+/usr/bin/ld: /usr/lib/x86_64-linux-gnu/libprotobuf.a(arena.o): relocation R_X86_64_TPOFF32 against hidden symbol `_ZN6google8protobuf8internal15ThreadSafeArena13thread_cache_E' can not be used when making a shared object
+      /usr/bin/ld: failed to set dynamic section sizes: bad value
+      collect2: error: ld returned 1 exit status
+      gmake[2]: *** [CMakeFiles/onnx_cpp2py_export.dir/build.make:101: onnx_cpp2py_export.cpython-312-x86_64-linux-gnu.so] Error 1
+      gmake[1]: *** [CMakeFiles/Makefile2:240: CMakeFiles/onnx_cpp2py_export.dir/all] Error 2
+      gmake: *** [Makefile:136: all] Error 2
+```
+
+то перед запуском установки зависимостей выполните команды
+
+```
+$ apt-get install libprotobuf-dev protobuf-compiler
+$ export CMAKE_ARGS="-DONNX_USE_PROTOBUF_SHARED_LIBS=ON"
+```
+Ошибка обнаружена yна6.14.0-36-generic #36~24.04.1-Ubuntu
+
 # Автоматическая сборка докер-образа по шаблону
 
-1. Убедитесь, что у вас установлены зависимости из `requirements.txt`.
-2. Установите `apt-get install gettext-base`.
-4. Выполните скрипт `make_triton_image.sh`, передав параметры в следующем порядке (если есть значение по умолчанию, то можно не указывать):
+Выполните скрипт `make_triton_image.sh`, передав параметры в следующем порядке (если есть значение по умолчанию, то можно не указывать):
   1. model_path — путь до модели.
   2. tokenizer_path — путь до токенайзера.
   3. id2label_path — путь до файла с маппингом классов.
